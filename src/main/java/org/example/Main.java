@@ -49,7 +49,7 @@ public class Main {
                         users.forEach(System.out::println);
                     }
                     case 3 -> System.out.println(userRepo.findById(Integer.parseInt(scanner.nextLine())));
-                    case 4 -> userRepo.update(userRepo.findById(Integer.parseInt(scanner.nextLine())));
+                    case 4 -> userRepo.update (Integer.parseInt(scanner.nextLine()));
                     case 5 -> userRepo.deleteById(Integer.parseInt(scanner.nextLine()));
                     case 6 -> {
                         System.out.println("Выход из программы");

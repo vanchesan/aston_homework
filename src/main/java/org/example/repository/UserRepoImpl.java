@@ -7,6 +7,7 @@ import org.example.Enity.User;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
+import java.util.Scanner;
 
 @RequiredArgsConstructor
 public class UserRepoImpl implements UserRepo {
@@ -50,14 +51,19 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public void update(User detachedUser) {
-        EntityManager em = sessionFactory.getCurrentSession();
+    public void update(int id) {
+        Scanner scanner = new Scanner(System.in);
+        EntityManager em = sessionFactory.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            User mergetUser = em.merge(detachedUser);
-            mergetUser.setAge(detachedUser.getAge());
-            mergetUser.setEmail(detachedUser.getEmail());
+            User user = em.find(User.class, id);
+            System.out.println("Изменить имя");
+            user.setName(scanner.next());
+            System.out.println("Изменить почту");
+            user.setEmail(scanner.next());
+            System.out.println("Изменить возраст");
+            user.setAge(Integer.parseInt(scanner.next()));
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
