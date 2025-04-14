@@ -10,7 +10,7 @@ public interface CrudRepo <T> {
 
     T findById(int id);
 
-    void update(T entity);
+    void update(int id);
 
     void delete(T entity);
 

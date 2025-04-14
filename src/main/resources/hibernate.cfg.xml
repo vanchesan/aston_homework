@@ -22,6 +22,9 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <property name="hibernate.validator.autoregister_listeners">true</property>
+
         <mapping class="org.example.Enity.User"/>
     </session-factory>
 </hibernate-configuration>
