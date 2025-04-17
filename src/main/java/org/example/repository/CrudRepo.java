@@ -1,5 +1,7 @@
 package org.example.repository;
 
+import org.example.Enity.User;
+
 import java.util.List;
 
 public interface CrudRepo <T> {
@@ -10,7 +12,7 @@ public interface CrudRepo <T> {
 
     T findById(int id);
 
-    void update(int id);
+    void update(User user);
 
     void delete(T entity);
 
