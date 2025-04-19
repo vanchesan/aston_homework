@@ -2,14 +2,12 @@ package org.example.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
 import org.example.Enity.User;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+
 
 @RequiredArgsConstructor
 public class UserRepoImpl implements UserRepo {

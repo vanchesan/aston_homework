@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @NotBlank (message = "Имя не может быть пустым")
     @Size(min = 2, max = 50, message = "Имя может содержить от 2 до 50 симвлов")
     @Column(name = "name", nullable = false)
