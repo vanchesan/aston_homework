@@ -60,7 +60,6 @@ class UserServiceTest {
 
     @Test
     void getUserById() {
-        int userId = 1;
         User mockUser = User.builder()
                 .id(1)
                 .name("Nik")
@@ -68,7 +67,7 @@ class UserServiceTest {
                 .age(16)
                 .created_at(LocalDate.parse("2025-04-19"))
                 .build();
-        when(userRepo.findById(userId)).thenReturn(mockUser);
+        when(userRepo.findById(EXISTED_USER_ID)).thenReturn(mockUser);
     }
 
     @Test
