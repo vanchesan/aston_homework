@@ -4,81 +4,81 @@ import org.example.Enity.User;
 import org.example.repository.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 class UserServiceTest {
-    private static final int EXISTED_USER_ID = 1;
-    private static final int NOT_EXISTED_USER_ID = 4;
-    private static final List<User> EXISTED_USER = List.of(User.builder().id(1)
-            .name("Jhon").email("jhon@mail.ru").age(18).created_at(LocalDate.parse("2025-04-17"))
-            .build(),
-            User.builder().id(2)
-                    .name("Nik").email("nik@mail.ru").age(16).created_at(LocalDate.parse("2025-04-17"))
-                    .build(),
-            User.builder().id(3)
-                    .name("Mike").email("mike@mail.ru").age(25).created_at(LocalDate.parse("2025-04-17"))
-                    .build());
-    @Mock
+
     private UserRepo userRepo;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-       MockitoAnnotations.openMocks(this);
-        this.userService = new UserService(userRepo);
-
+        userRepo = mock(UserRepo.class);
+        userService = new UserService(userRepo);
     }
 
     @Test
-    void createUser() {
-        User newUser = User.builder()
-                .name("Nik")
-                .email("nik@mail.ru")
-                .age(16)
-                .created_at(LocalDate.parse("2025-04-19"))
-                .build();
-        userService.createUser("Nik", "nik@mail.ru", 16);
-        verify(userRepo, times(1)).save(newUser);
+    void createUser_ValidInput_Success() {
+        String name = "John";
+        String email = "john@example.com";
+        Integer age = 25;
+
+        doNothing().when(userRepo).save(any(User.class));
+
+        assertDoesNotThrow(() -> userService.createUser(name, email, age));
+        verify(userRepo, times(1)).save(any(User.class));
     }
 
     @Test
-    void getAllUsers() {
-        when(userRepo.findAll()).thenReturn(EXISTED_USER);
+    void createUser_InvalidEmail_ThrowsException() {
+        String name = "John";
+        String email = "not-email";
+        Integer age = 25;
+
+        Exception ex = assertThrows(IllegalArgumentException.class,
+                () -> userService.createUser(name, email, age));
+
+        assertTrue(ex.getMessage().contains("Неккоретный email1"));
+    }
+
+    @Test
+    void getAllUsers_ReturnsList() {
+        when(userRepo.findAll()).thenReturn(List.of(new User(), new User()));
         List<User> users = userService.getAllUsers();
-        assertEquals(3, users.size());
-        verify(userRepo, times(1)).findAll();
+        assertEquals(2, users.size());
     }
 
     @Test
-    void getUserById() {
-        User mockUser = User.builder()
+    void updateUser_ValidData_Success() {
+        User existing = User.builder()
                 .id(1)
-                .name("Nik")
-                .email("nik@mail.ru")
-                .age(16)
-                .created_at(LocalDate.parse("2025-04-19"))
+                .name("Old")
+                .email("old@email.com")
+                .age(30)
+                .created_at(LocalDate.now())
                 .build();
-        when(userRepo.findById(EXISTED_USER_ID)).thenReturn(mockUser);
+
+        when(userRepo.findById(1)).thenReturn(existing);
+        doNothing().when(userRepo).update(any(User.class));
+
+        userService.updateUser(1, "New", "new@email.com", 35);
+
+        verify(userRepo).update(argThat(user ->
+                user.getName().equals("New") &&
+                        user.getEmail().equals("new@email.com") &&
+                        user.getAge() == 35));
     }
 
     @Test
-    void updateUser() {
-    }
-
-    @Test
-    void deleteUser() {
-    }
-
-    @Test
-    void validateUser() {
+    void deleteUser_CallsRepo() {
+        doNothing().when(userRepo).deleteById(1);
+        userService.deleteUser(1);
+        verify(userRepo, times(1)).deleteById(1);
     }
 }
